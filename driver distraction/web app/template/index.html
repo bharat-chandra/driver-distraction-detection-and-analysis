@@ -1,0 +1,31 @@
+{% extends 'headerPage.html' %}
+
+{% block content%}
+<div class="jumbotron" >
+    <h2>Upload Image for Classification</h2><br>
+    <a href={% url 'display' %} target="blank" style="float: right;">view insights</a>
+    <form method="post" enctype="multipart/form-data" action="predictImage">
+        {% csrf_token %}
+        <div class="col-md-4 col-sm-4">
+            <label for="fname">Upload Image File Here:</label>
+        </div>
+        <input name="filePath" type="file"><br><br><br>
+        <input type="submit" value="predict distraction" style="float: left">
+        <a class="button-primary" style="float: right" onclick="fun()" id="drowsiness">predict with cam</a>
+    </form>
+</div>
+<br><br>
+<h2>The classification of the image is <span style="color: blue;">{{predictedLabel}}</span></h2>
+<img src={{filePathName}} alt='No preview' id="img1" style="float: left;">
+<img src="" alt='No preview' id="img2" style="float: right;">
+    <script type="text/javascript" lang="javascript">
+    function fun(){
+        document.getElementById("img2").src="{% url 'video1' %}";
+        document.getElementById("drowsiness").innerText="stop detection";
+        document.getElementById("drowsiness").setAttribute('onclick','stop()')
+    }
+    function stop(){
+        document.getElementById("img2").src="";
+    }
+    </script>
+{% endblock %}

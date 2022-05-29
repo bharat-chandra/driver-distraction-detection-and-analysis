@@ -1,0 +1,96 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+     <title>Driver destraction detection</title>
+
+     <meta charset="UTF-8">
+     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+     <meta name="description" content="">
+     <meta name="keywords" content="">
+     <meta name="author" content="Tooplate">
+     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+     <style>
+          body{
+               position: relative;
+               height: 100%;
+               background-color: #cea352;
+               background-repeat:no-repeat;
+               background-size:100% 100vh;
+          }
+          footer{
+               bottom: 200px;
+               height: 60px;
+               display: flex;
+               position: fixed;
+               width:100%;
+               flex-direction: row-reverse;
+          }
+          header{
+               top: 0;
+               height: 70px;
+               border-bottom: 1px solid black;
+               box-shadow: 0 5px 20px black;
+          }
+     </style>
+</head>
+<body id="top" data-spy="scroll" data-target=".navbar-collapse" data-offset="50">
+<header>
+     <center style="color:white;text-shadow: 2px 2px 5px black">
+          <h3>𝙰𝚗𝚊𝚕𝚢𝚜𝚒𝚜 𝙾𝚗 𝙳𝚛𝚒𝚟𝚎𝚛 𝙳𝚒𝚜𝚝𝚛𝚊𝚌𝚝𝚒𝚘𝚗</h3>
+          <h4>𝚠𝚎𝚕𝚌𝚘𝚖𝚎 𝚝𝚘 𝚍𝚊𝚜𝚑𝚋𝚘𝚊𝚛𝚍</h4>
+     </center>
+</header><br>
+<div id="editor"></div>
+<div class="container">
+<div style="width:100%;height:600px;overflow:scroll">
+    <img src="{{graph}}">
+</div><br>
+<div style="background-color:tomato;border-radius:15px;">
+    <h2 style='color:white'>distraction history : </h2>
+    <hr>
+    <h3 style='color:white'>Filter by date : 
+        <select id="select">
+            <option value="all dates" selected>all dates{{i}}</option>
+            {% for i in dates %}
+            <option value="{{i}}">{{i}}</option>
+            {% endfor %}
+        </select>
+        <button type="button" id="submit">submit</button>
+    </h3>
+</div>
+<div id="d" style="">{{res}}</div>
+{% csrf_token %}
+<script>
+    $("#submit").click(function(){
+        var date = document.getElementById("select");
+        var date = date.options[date.selectedIndex].text;
+        $.ajax({
+        type: "POST",
+        url: "{% url 'query' %}",
+        data:{'date':date},
+        success: function(data){
+            $("#d").empty();
+            $("#d").html(data);
+            $(".dataframe").addClass('table table-bordered');
+            $(".dataframe").css('background-color','yellowgreen');
+            $(".dataframe").css('border-radius','25px');
+            $(".dataframe").css('border','#cea352');
+        }
+        });
+    });
+</script>
+
+</div>
+<footer>
+     <button class="btn btn-success btn-lg" id="generatePDF" onclick="print()">🖨️ download report</button>
+</footer>
+</body>
+</html>
+
